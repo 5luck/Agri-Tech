@@ -28,26 +28,26 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration
-const allowedOrigins = [
-  config.clientUrl,
+const normalizeOrigin = (value) =>
+  value?.trim().replace(/\/+$/, '');
+
+const allowedOrigins = new Set([
+  normalizeOrigin(config.clientUrl),
   'https://agri-tech-ri-9136.vercel.app',
+  'https://agri-tech-hr011y4e3-rj-9136.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-].filter(Boolean);
+].filter(Boolean));
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Requests without an Origin header, such as server-to-server requests.
-    if (!origin) {
+    if (!origin || allowedOrigins.has(normalizeOrigin(origin))) {
       return callback(null, true);
     }
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    console.error('[CORS] Blocked origin:', JSON.stringify(origin));
+    console.error('[CORS] Allowed origins:', [...allowedOrigins]);
 
-    // Deny the origin without throwing an error into Express error handling.
-    console.error(`[CORS] Blocked origin: ${origin}`);
     return callback(null, false);
   },
   credentials: true,
@@ -56,8 +56,8 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-// Register CORS before routes so browser preflight requests are handled.
 app.use(cors(corsOptions));
+// Register CORS before routes so browser preflight requests are handled.
 
 // Logging
 if (config.env !== 'test') {
