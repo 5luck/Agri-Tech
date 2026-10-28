@@ -33,7 +33,7 @@ const normalizeOrigin = (value) =>
 
 const allowedOrigins = new Set([
   normalizeOrigin(config.clientUrl),
-  'https://agri-tech-ri-9136.vercel.app',
+  'https://agri-tech-rj-9136.vercel.app',
   'https://agri-tech-hr011y4e3-rj-9136.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
