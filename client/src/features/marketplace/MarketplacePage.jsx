@@ -154,7 +154,7 @@ export const MarketplacePage = () => {
                 Order #{orderSuccess.orderNumber} Created Successfully!
               </div>
               <div style={{ fontSize: '13px', color: 'var(--color-text-main)' }}>
-                Total: ₹{orderSuccess.totalAmount.toLocaleString('en-IN')} • Status: {orderSuccess.orderStatus} (Development Checkout)
+                Total: ₹{orderSuccess.totalAmount?.toLocaleString('en-IN')} • Status: {orderSuccess.orderStatus} (Development Checkout)
               </div>
             </div>
           </div>
