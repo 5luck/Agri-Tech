@@ -1,0 +1,35 @@
+:root {
+  /* Brand agricultural color palette */
+  --color-primary: #244C3A;       /* Forest Green */
+  --color-primary-dark: #173629;  /* Deep Green */
+  --color-secondary: #4F7958;     /* Leaf Green */
+  --color-sage: #A8BE9A;          /* Sage */
+  --color-sage-light: #E8EFE3;    /* Pale Sage */
+  --color-bg-ivory: #F7F6EF;      /* Warm Ivory */
+  --color-card-bg: #FFFFFF;       /* Pure White */
+  --color-earth: #8A6748;         /* Earth Brown */
+  --color-harvest: #D8AC4A;       /* Harvest Gold */
+  --color-text-main: #25332B;     /* Text Primary */
+  --color-text-muted: #68756C;    /* Text Secondary */
+  --color-border: #DDE3D9;        /* Border */
+  --color-danger: #B8473D;        /* Errors & Critical alerts */
+  --color-success: #327653;       /* Success */
+  --color-warning: #D8AC4A;
+
+  /* Typography */
+  --font-sans: 'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(36, 76, 58, 0.05);
+  --shadow-md: 0 4px 12px rgba(36, 76, 58, 0.08);
+  --shadow-lg: 0 10px 25px rgba(36, 76, 58, 0.12);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
