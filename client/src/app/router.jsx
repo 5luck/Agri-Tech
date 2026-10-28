@@ -2,6 +2,7 @@ import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { PublicLayout } from '../components/layout/PublicLayout';
 import { AppLayout } from '../components/layout/AppLayout';
+import { RouteErrorBoundary } from '../components/feedback/RouteErrorBoundary';
 
 import { LandingPage } from '../features/landing/LandingPage';
 import { LoginPage } from '../features/auth/LoginPage';
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <PublicLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       { index: true, element: <LandingPage /> },
       { path: 'login', element: <LoginPage /> },
@@ -36,6 +38,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       { path: 'dashboard', element: <FarmerDashboard /> },
       { path: 'farms', element: <FarmListPage /> },
