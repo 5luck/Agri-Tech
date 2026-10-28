@@ -1,3 +1,4 @@
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -27,22 +28,36 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, curl, or same-origin)
-      if (!origin) return callback(null, true);
-      const allowed = [config.clientUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'];
-      if (allowed.includes(origin) || config.env !== 'production') {
-        return callback(null, true);
-      }
-      return callback(new Error('Blocked by CORS policy'));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  })
-);
+const allowedOrigins = [
+  config.clientUrl,
+  'https://agri-tech-ri-9136.vercel.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Requests without an Origin header, such as server-to-server requests.
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Deny the origin without throwing an error into Express error handling.
+    console.error(`[CORS] Blocked origin: ${origin}`);
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
+// Register CORS before routes so browser preflight requests are handled.
+app.use(cors(corsOptions));
 
 // Logging
 if (config.env !== 'test') {
@@ -56,14 +71,18 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 // Global API rate limiting
 app.use('/api/', apiLimiter);
 
-// Health check endpoint
+// Health check endpoints
 const healthHandler = (req, res) => {
-  return sendSuccess(res, {
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    environment: config.env,
-    version: '1.0.0'
-  }, 'Agri-Tech API is online');
+  return sendSuccess(
+    res,
+    {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      environment: config.env,
+      version: '1.0.0',
+    },
+    'Agri-Tech API is online'
+  );
 };
 
 app.get('/health', healthHandler);
@@ -83,12 +102,16 @@ app.use('/api/v1/consultations', consultationsRoutes);
 app.use('/api/v1/posts', communityRoutes);
 app.use('/api/v1/admin', adminRoutes);
 
-// Catch-all 404 for unmatched API routes
-app.use('/api/*', (req, res) => {
-  return sendError(res, `API route not found: ${req.method} ${req.originalUrl}`, 404);
+// Catch-all for unmatched API routes
+app.use('/api', (req, res) => {
+  return sendError(
+    res,
+    `API route not found: ${req.method} ${req.originalUrl}`,
+    404
+  );
 });
 
-// Global Error Handler
+// Global error handler
 app.use(errorHandler);
 
 export default app;
